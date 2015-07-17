@@ -13,10 +13,10 @@ try {
 }
 
 console.log('the test below should create a custom function validator constraint');
-var c2 = Model.ConstraintBuilder.build(function (v) { return v === 'test'; });
+var c2 = Model.ConstraintBuilder.build(function (v, against) { return v === against; });
 console.log(c2);
-console.log(c2.check(''));
-console.log(c2.check('test'));
+console.log(c2.check('', 'test'));
+console.log(c2.check('test', 'test'));
 
 
 console.log('fails (but assignment does not work! ... accepted for now)');
@@ -56,11 +56,34 @@ console.log(InstanceOfMyObject.check(o));
 var InstanceOf = Model.ConstraintBuilder.build(function (v, obj) {
    return v instanceof obj;
 });
- console.log(InstanceOf.check(o, MyObject));
+console.log(InstanceOf.check(o, MyObject));
 // I would prefer strict type safety...perhaps it is up to the validator function to handle this
 console.log(InstanceOf.check(o, Object)); // I do not like this! ... but ok for now
+
 var Other = function (){
 	this.name = "test";
 };
- console.log('InstanceOf Other: ' + InstanceOf.check(o, Other));
+console.log('InstanceOf Other: ' + InstanceOf.check(o, Other));
 // YESSSSSSSSSSssssssssss!!!!
+
+// Ideally
+var Arg = {
+	value: 'test',
+	constraints: {}
+};
+
+Arg.constraints[InstanceOf] = [Other];
+Arg.constraints[c2] = ['test'];
+
+function validate(obj) {
+	fns = Object.keys(obj.constraints);
+	var invalid = false;
+	fns.forEach(function (fn) {
+		invalid = invalid || !Object.apply(fn, obj.constraints[fn]);
+	});
+	return !invalid;
+}
+
+console.log(validate(Arg));
+
+console.log('Constaint added');

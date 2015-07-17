@@ -6,6 +6,7 @@
 //ConstraintBuilder
 var ConstraintBuilder = {
     build: function (valFn) {
+		'using strict';
 		if (valFn == null || valFn == undefined || typeof(valFn) !== 'function') {
 			throw "Undefined constraint function";
 		}
@@ -14,6 +15,7 @@ var ConstraintBuilder = {
 			check: valFn
 		};
 
+		// 'check' propery will always be called by validators
 		Object.defineProperty(Constraint, 'check', {
 			enumerable: true,
 			configurable: false,
@@ -24,4 +26,13 @@ var ConstraintBuilder = {
 	}
 };
 
+var ArgumentBuilder = {
+	build: function () {
+		'using strict';
+		var Argument = {};
+		return Argument;
+	}
+};
+
 exports.ConstraintBuilder = ConstraintBuilder;
+exports.ArgumentBuilder = ArgumentBuilder;
