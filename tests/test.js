@@ -84,6 +84,4 @@ function validate(obj) {
 	return !invalid;
 }
 
-console.log(validate(Arg));
-
-console.log('Constaint added');
+console.log('Validate: ' + validate(Arg));
