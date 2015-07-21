@@ -85,3 +85,73 @@ function validate(obj) {
 }
 
 console.log('Validate: ' + validate(Arg));
+
+
+// more concrete examples
+var iof = function () {
+	// the following 3 lines need to be parameterized
+	// via builder pattern.
+	if (!arguments || arguments.length === 0) {
+		throw new Error("Not enough arguments");
+	}
+	//console.log("Arguments found: " + arguments.length);
+
+	// make sure object is not array and
+	// has Argument.prototype in its prototype chain
+	if (!Array.isArray(this) && Model.isArgument(this)) {
+		//console.log('GOT value: ' + this.value);
+		//console.log('ARG[0] is: ' + arguments[0]);
+
+		if (typeof(arguments[0]) === 'object') {
+			throw new TypeError("Invalid type!");
+		}
+
+		// String literals should be checked with typeof
+		if (arguments[0] === String) {
+			return typeof(this.value) === "string";
+		}
+
+		// This is the main implementation
+		return this.value instanceof arguments[0];
+	} else {
+		throw new Error("Object not instance of 'Argument'");
+	}
+};
+
+// the 'iof' above is a better implementation
+var between = function () {
+	if (!arguments || arguments.length < 2) {
+		throw "Not enough arguments";
+	}
+	var min = arguments[0],
+		max = arguments[1];
+	return this > min && this < max;
+};
+
+try {
+	console.log("Arg.iof(Other)");
+	iof.apply(Arg, [Other]);
+} catch (e) {
+	console.log(e);
+}
+
+try {
+	console.log("Arg.iof()");
+  iof.apply(Arg, []);
+} catch (e) {
+	console.log(e);
+}
+
+try {
+	console.log("Arg.iof(String)");
+  iof.apply(Arg, [String]);
+} catch (e) {
+	console.log(e);
+}
+console.log("\n'haha' instance of String: " + ('haha' instanceof String));
+console.log("\nLET's SEE!!!\n");
+var arg2 = Model.ArgumentBuilder.build("test");
+console.log("arg2.iof(String): " + iof.apply(arg2, [String]));
+
+// the following currently throws TypeError
+console.log("arg2.iof(arg2): " + iof.apply(arg2, [arg2]));

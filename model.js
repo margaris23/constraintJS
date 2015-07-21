@@ -7,7 +7,7 @@
 var ConstraintBuilder = {
     build: function (valFn) {
 		'using strict';
-		if (valFn == null || valFn == undefined || typeof(valFn) !== 'function') {
+		if (valFn === null || valFn === undefined || typeof(valFn) !== 'function') {
 			throw "Undefined constraint function";
 		}
 		// TODO we have to also check for number of arguments?
@@ -26,13 +26,28 @@ var ConstraintBuilder = {
 	}
 };
 
+// Common Object
+var Argument = function (value) {
+	this.value = value;
+};
+
+// Object.defineProperty(Argument, 'value', {
+// 	enumerable: true,
+// 	configurable: false,
+// 	writable: false
+// });
+
 var ArgumentBuilder = {
-	build: function () {
-		'using strict';
-		var Argument = {};
-		return Argument;
+	build: function (value) {
+		return Object.seal(new Argument(value));
 	}
 };
 
+function isArgument (obj) {
+	return obj !== undefined && obj !== null &&
+		obj instanceof Argument;
+}
+
+exports.isArgument = isArgument;
 exports.ConstraintBuilder = ConstraintBuilder;
 exports.ArgumentBuilder = ArgumentBuilder;
