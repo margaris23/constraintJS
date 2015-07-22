@@ -1,6 +1,6 @@
 /*
  * test.js
- * Copyright (C) 2015 margaris <margaris@localhost>
+ * Copyright (C) 2015 margaris <reverence23@gmail.com>
  */
 var Model = require('../model.js');
 
@@ -31,7 +31,10 @@ try {
 console.log('\n REAL EXAMPLES \n');
 
 // Simple example
-var Required = Model.ConstraintBuilder.build(function (v) { return v !== null && v !== undefined; });
+var Required = Model.ConstraintBuilder.build(function (v) {
+	return v !== null && v !== undefined;
+});
+
 // This is the toughest case: we also need to provide type in string format
 // i.e TypeOf.check(v, 'function') ... :O !!!
 var TypeOf = Model.ConstraintBuilder.build(function (v) { return undefined; });
@@ -57,7 +60,8 @@ var InstanceOf = Model.ConstraintBuilder.build(function (v, obj) {
    return v instanceof obj;
 });
 console.log(InstanceOf.check(o, MyObject));
-// I would prefer strict type safety...perhaps it is up to the validator function to handle this
+// I would prefer strict type safety...
+// perhaps it is up to the validator function to handle this
 console.log(InstanceOf.check(o, Object)); // I do not like this! ... but ok for now
 
 var Other = function (){
@@ -88,27 +92,25 @@ console.log('Validate: ' + validate(Arg));
 
 
 // more concrete examples
+// Constraint Function
 var iof = function () {
 	// the following 3 lines need to be parameterized
 	// via builder pattern.
 	if (!arguments || arguments.length === 0) {
 		throw new Error("Not enough arguments");
 	}
-	//console.log("Arguments found: " + arguments.length);
 
 	// make sure object is not array and
 	// has Argument.prototype in its prototype chain
 	if (!Array.isArray(this) && Model.isArgument(this)) {
-		//console.log('GOT value: ' + this.value);
-		//console.log('ARG[0] is: ' + arguments[0]);
-
 		if (typeof(arguments[0]) === 'object') {
-			throw new TypeError("Invalid type!");
+			throw new TypeError("Invalid type: [object]!");
 		}
 
-		// String literals should be checked with typeof
+		// String literals should also be checked with typeof
 		if (arguments[0] === String) {
-			return typeof(this.value) === "string";
+			return this.value instanceof String ||
+					typeof(this.value) === "string";
 		}
 
 		// This is the main implementation
@@ -131,27 +133,26 @@ var between = function () {
 try {
 	console.log("Arg.iof(Other)");
 	iof.apply(Arg, [Other]);
-} catch (e) {
-	console.log(e);
-}
+} catch (e) { console.log(e); }
 
 try {
 	console.log("Arg.iof()");
   iof.apply(Arg, []);
-} catch (e) {
-	console.log(e);
-}
+} catch (e) { console.log(e); }
 
 try {
 	console.log("Arg.iof(String)");
   iof.apply(Arg, [String]);
-} catch (e) {
-	console.log(e);
-}
+} catch (e) { console.log(e); }
+
 console.log("\n'haha' instance of String: " + ('haha' instanceof String));
 console.log("\nLET's SEE!!!\n");
 var arg2 = Model.ArgumentBuilder.build("test");
 console.log("arg2.iof(String): " + iof.apply(arg2, [String]));
 
 // the following currently throws TypeError
-console.log("arg2.iof(arg2): " + iof.apply(arg2, [arg2]));
+try {
+	console.log("arg2.iof(arg2): " + iof.apply(arg2, [arg2]));
+} catch (e) {
+	console.log(e);
+}
