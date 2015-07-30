@@ -2,32 +2,31 @@
  * test.js
  * Copyright (C) 2015 margaris <margaris@localhost>
  */
+var assert = require("assert");
 var Model = require('../model.js');
 
-console.log('the test below should catch the exception!');
-try {
-	var c1 = Model.ConstraintBuilder.build();
-	console.log(c1);
-} catch (e) {
-	console.log('Success!');
-}
+it('should throw exception with undefined constraint function', function () {
+	assert.throws(function () {
+		Model.ConstraintBuilder.build();
+	},Error);
+});
 
-console.log('the test below should create a custom function validator constraint');
-var c2 = Model.ConstraintBuilder.build(function (v, against) { return v === against; });
-console.log(c2);
-console.log(c2.check('', 'test'));
-console.log(c2.check('test', 'test'));
+describe('should test a custom "equality" validator constraint', function () {
+	var c2 = Model.ConstraintBuilder.build(function (v, against) {
+		return !!v && !!against && v === against;
+	});
+	it('"" eq "test"', function () {
+		assert.equal(c2.check('', 'test'), false);
+	});
+	it('"test" eq "test"', function () {
+		assert.equal(c2.check('test', 'test'), true);
+	});
+	it('empty or no arguments', function () {
+		assert.equal(c2.check(), false);
+	});
+});
 
-
-console.log('fails (but assignment does not work! ... accepted for now)');
-try {
-	c2.check = 'this should throw exception';
-	console.log(c2.check());
-	console.log('Acceptable for now if reply is false');
-} catch (e) {
-	console.log('Success!');
-}
-
+return;
 console.log('\n REAL EXAMPLES \n');
 
 // Simple example
@@ -87,3 +86,4 @@ function validate(obj) {
 console.log(validate(Arg));
 
 console.log('Constaint added');
+

@@ -8,7 +8,7 @@ var ConstraintBuilder = {
     build: function (valFn) {
 		'using strict';
 		if (valFn == null || valFn == undefined || typeof(valFn) !== 'function') {
-			throw "Undefined constraint function";
+			throw new Error("Undefined constraint function");
 		}
 		// TODO we have to also check for number of arguments?
 		var Constraint = {
