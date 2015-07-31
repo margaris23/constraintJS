@@ -5,17 +5,19 @@
 var assert = require("assert");
 var Model = require('../model.js');
 
-it('should throw exception with undefined constraint function', function () {
-	assert.throws(function () {
-		Model.ConstraintBuilder.build();
-	},Error);
+describe('Test no constraint function sepcified', function () {
+	it('should throw exception', function () {
+		assert.throws(function () {
+			Model.ConstraintBuilder.build();
+		},Error);
+	});
 });
 
-describe('should test a custom "equality" validator constraint', function () {
+describe('Test a custom "equality" validator constraint', function () {
 	var c2 = Model.ConstraintBuilder.build(function (v, against) {
 		return !!v && !!against && v === against;
 	});
-	it('"" eq "test"', function () {
+	it('"" neq "test"', function () {
 		assert.equal(c2.check('', 'test'), false);
 	});
 	it('"test" eq "test"', function () {
