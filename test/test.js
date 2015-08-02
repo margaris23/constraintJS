@@ -5,7 +5,7 @@
 var assert = require("assert");
 var Model = require('../model.js');
 
-describe('Test no constraint function sepcified', function () {
+describe('No constraint function specified', function () {
 	it('should throw exception', function () {
 		assert.throws(function () {
 			Model.ConstraintBuilder.build();
@@ -13,23 +13,21 @@ describe('Test no constraint function sepcified', function () {
 	});
 });
 
-describe('Test a custom "equality" validator constraint', function () {
-	var c2 = Model.ConstraintBuilder.build(function (v, against) {
-		return !!v && !!against && v === against;
-	});
+var c2 = Model.ConstraintBuilder.build(function (v, against) {
+	return !!v && !!against && v === against;
+});
+
+describe('Custom "equality" validator constraint', function () {
 	it('"" neq "test"', function () {
 		assert.equal(c2.check('', 'test'), false);
 	});
 	it('"test" eq "test"', function () {
 		assert.equal(c2.check('test', 'test'), true);
 	});
-	it('empty or no arguments', function () {
+	it('should return false when empty or no arguments', function () {
 		assert.equal(c2.check(), false);
 	});
 });
-
-return;
-console.log('\n REAL EXAMPLES \n');
 
 // Simple example
 var Required = Model.ConstraintBuilder.build(function (v) {
@@ -41,35 +39,53 @@ var Required = Model.ConstraintBuilder.build(function (v) {
 var TypeOf = Model.ConstraintBuilder.build(function (v) { return undefined; });
 // The above could be done differently ... for now
 
-// Another tough one is instanceOf
+
 var MyObject = function () {
 	this.name = "default";
 };
-var o = new MyObject();
-console.log('Instance of MyObject: ' + (o instanceof MyObject));
-console.log(o.name);
-
 
 var InstanceOfMyObject = Model.ConstraintBuilder.build(function (v) {
 	return v instanceof MyObject; // the 2nd arg should be parameterized
 });
-console.log(InstanceOfMyObject.check(o));
 
+// Create a global MyObject
+var o = new MyObject();
+
+describe('Instance of MyObject', function () {
+	it('should return true', function () {
+		assert.equal(InstanceOfMyObject.check(o), true);
+	});
+});
 
 // FINALLY :) :-) ... oh!!!
+// I would prefer strict type safety...
+// perhaps it is up to the validator function to handle this
 var InstanceOf = Model.ConstraintBuilder.build(function (v, obj) {
    return v instanceof obj;
 });
-console.log(InstanceOf.check(o, MyObject));
-// I would prefer strict type safety...
-// perhaps it is up to the validator function to handle this
-console.log(InstanceOf.check(o, Object)); // I do not like this! ... but ok for now
 
+describe('Instanceof constraint check', function () {
+	it('of MyObject', function () {
+		assert.equal(InstanceOf.check(o, MyObject), true);
+	});
+
+	it('of Object', function () {
+		assert.equal(InstanceOf.check(o, Object), true);
+		// I do not like this! ... but ok for now!
+	});
+});
+
+// Other object to validate against MyObject
 var Other = function (){
 	this.name = "test";
 };
-console.log('InstanceOf Other: ' + InstanceOf.check(o, Other));
-// YESSSSSSSSSSssssssssss!!!!
+
+describe('InstanceOf Other', function () {
+	it('should be false', function () {
+		assert.equal(InstanceOf.check(o, Other), false);
+		//YESSSSSSSSSSssssssssss!!!!
+	});
+});
 
 // Ideally
 var Arg = {
@@ -89,9 +105,13 @@ function validate(obj) {
 	return !invalid;
 }
 
-console.log('Validate: ' + validate(Arg));
+describe('Validate function embedded in an object (ideally)', function () {
+	it('should be true', function () {
+	   assert.equal(validate(Arg), true);
+	});
+});
 
-
+return;
 // more concrete examples
 // Constraint Function
 var iof = function () {
