@@ -1,0 +1,29 @@
+{
+  "name": "constraintjs",
+  "version": "1.0.0",
+  "description": "Constraint Objects in JavaScript",
+  "main": "model.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/margaris23/constraintJS.git"
+  },
+  "keywords": [
+    "constraint",
+    "js"
+  ],
+  "author": "Nikolaos Margaris",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/margaris23/constraintJS/issues"
+  },
+  "homepage": "https://github.com/margaris23/constraintJS#readme",
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  }
+}
