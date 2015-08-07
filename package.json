@@ -1,6 +1,6 @@
 {
   "name": "constraintjs",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Constraint Objects in JavaScript",
   "main": "model.js",
   "directories": {
@@ -18,7 +18,7 @@
     "js"
   ],
   "author": "Nikolaos Margaris",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/margaris23/constraintJS/issues"
   },
