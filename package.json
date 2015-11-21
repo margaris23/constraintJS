@@ -24,6 +24,12 @@
   },
   "homepage": "https://github.com/margaris23/constraintJS#readme",
   "devDependencies": {
+    "gulp": "^3.9.0",
     "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "gulp-istanbul": "^0.10.2",
+    "gulp-mocha": "^2.2.0",
+    "mocha-istanbul": "^0.2.0"
   }
 }
