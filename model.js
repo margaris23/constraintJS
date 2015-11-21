@@ -36,7 +36,7 @@ var ConstraintBuilder = {
 
 // Argument Object:
 // it must be minimal and not extendable
-var Argument = function (value) {
+/*var Argument = function (value) {
   this.value = value;
 };
 
@@ -51,6 +51,6 @@ function isArgument (obj) {
     obj instanceof Argument;
 }
 
-exports.isArgument = isArgument;
+exports.isArgument = isArgument;*/
 exports.ConstraintBuilder = ConstraintBuilder;
-exports.ArgumentBuilder = ArgumentBuilder;
+//exports.ArgumentBuilder = ArgumentBuilder;
