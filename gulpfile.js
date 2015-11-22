@@ -10,8 +10,8 @@ var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 
 
-gulp.task('default', function() {
-	  // place code for your default task here
+gulp.task('default', ['test'], function() {
+  // Default task
 });
 
 gulp.task('pre-test', function () {

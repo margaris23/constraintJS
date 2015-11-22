@@ -19,7 +19,7 @@ var ConstraintBuilder = {
   build: function (valFn, numOfArgs) {
     'use strict';
 
-    if (valFn == null || valFn == undefined || typeof(valFn) !== 'function') {
+    if (valFn === undefined || valFn === null || typeof(valFn) !== 'function') {
 	throw new Error("Undefined constraint function");
     }
 
