@@ -112,7 +112,8 @@ describe('Validate function embedded in an object (ideally)', function () {
  });
 });
 
-return;
+/*
+
 // more concrete examples
 // Constraint Function
 var iof = function () {
@@ -178,3 +179,4 @@ try {
 } catch (e) {
   console.log(e);
 }
+*/

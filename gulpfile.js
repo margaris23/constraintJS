@@ -9,12 +9,20 @@ var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var plato = require('gulp-plato');
+var eslint = require('gulp-eslint');
 
 gulp.task('default', ['test'], function() {
   // Default task
 });
+ 
+gulp.task('eslint', function () {
+    return gulp.src('model.js')
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
 
-gulp.task('pre-test', function () {
+gulp.task('pre-test', ['eslint'], function () {
   return gulp.src(['model.js'])
     // Covering files
     .pipe(istanbul())
@@ -32,7 +40,7 @@ gulp.task('test', ['pre-test', 'plato'], function () {
 });
 
 gulp.task('plato', function () {
-  return gulp.src('model.js')
+  return gulp.src(['model.js', 'test/*.js'])
         .pipe(plato('report', {
             jshint: {
                 options: {

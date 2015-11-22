@@ -8,31 +8,31 @@
  * @description creates the main constraint object
  */
 var Constraint = function (valFn, numOfArgs) {
-  'use strict';
-  this.check = valFn;
-  this.noa = numOfArgs;	// for now lets consider them valid
+    'use strict';
+    this.check = valFn;
+    this.noa = numOfArgs;	// for now lets consider them valid
 };
 
  /**
   * @module ConstraintBuilder
   */
 var ConstraintBuilder = {
-  build: function (valFn, numOfArgs) {
-    'use strict';
+    build: function (valFn, numOfArgs) {
+        'use strict';
 
-    if (valFn === undefined || valFn === null || typeof(valFn) !== 'function') {
-	throw new Error("Undefined constraint function");
+        if (valFn === undefined || valFn === null || typeof(valFn) !== 'function') {
+            throw new Error('Undefined constraint function');
+        }
+
+        // 'check' propery will always be called by validators
+        // Object.defineProperty(Constraint, 'check', {
+        // 	enumerable: true,
+        // 	configurable: false,
+        // 	writable: false
+        // });
+
+        return Object.seal(new Constraint(valFn, numOfArgs));
     }
-
-    // 'check' propery will always be called by validators
-    // Object.defineProperty(Constraint, 'check', {
-    // 	enumerable: true,
-    // 	configurable: false,
-    // 	writable: false
-    // });
-
-    return Object.seal(new Constraint(valFn, numOfArgs));
-  }
 };
 
 // Argument Object:
