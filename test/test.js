@@ -1,115 +1,116 @@
+/* global describe, it */
 /*
  * @module test.js
  * @description Copyright (C) 2015 margaris <reverence23@gmail.com>
  */
-var assert = require("assert");
+var assert = require('assert');
 var Model = require('../model.js');
 
 describe('No constraint function specified', function () {
-  it('should throw exception', function () {
-    assert.throws(function () {
-      Model.ConstraintBuilder.build();
-    },Error);
-  });
+    it('should throw exception', function () {
+        assert.throws(function () {
+            Model.ConstraintBuilder.build();
+        },Error);
+    });
 });
 
 var c2 = Model.ConstraintBuilder.build(function (v, against) {
-           return !!v && !!against && v === against;
-         });
+    return !!v && !!against && v === against;
+});
 
 describe('Custom "equality" validator constraint', function () {
-  it('"" neq "test"', function () {
-    assert.equal(c2.check('', 'test'), false);
-  });
-  it('"test" eq "test"', function () {
-    assert.equal(c2.check('test', 'test'), true);
-  });
-  it('should return false when empty or no arguments', function () {
-    assert.equal(c2.check(), false);
-  });
+    it('"" neq "test"', function () {
+        assert.equal(c2.check('', 'test'), false);
+    });
+    it('"test" eq "test"', function () {
+        assert.equal(c2.check('test', 'test'), true);
+    });
+    it('should return false when empty or no arguments', function () {
+        assert.equal(c2.check(), false);
+    });
 });
 
 // Simple example
-var Required = Model.ConstraintBuilder.build(function (v) {
-                 return v !== null && v !== undefined;
-               });
+//var Required = Model.ConstraintBuilder.build(function (v) {
+//    return v !== null && v !== undefined;
+//});
 
 // This is the toughest case: we also need to provide type in string format
 // i.e TypeOf.check(v, 'function') ... :O !!!
-var TypeOf = Model.ConstraintBuilder.build(function (v) { return undefined; });
+//var TypeOf = Model.ConstraintBuilder.build(function (v) { return undefined; });
 // The above could be done differently ... for now
 
 
 var MyObject = function () {
-  this.name = "default";
+    this.name = 'default';
 };
 
 var InstanceOfMyObject = Model.ConstraintBuilder.build(function (v) {
-                           // the 2nd arg should be parameterized
-                           return v instanceof MyObject;
-                         });
+    // the 2nd arg should be parameterized
+    return v instanceof MyObject;
+});
 
 // Create a global MyObject
 var o = new MyObject();
 
 describe('Instance of MyObject', function () {
-  it('should return true', function () {
-    assert.equal(InstanceOfMyObject.check(o), true);
-  });
+    it('should return true', function () {
+        assert.equal(InstanceOfMyObject.check(o), true);
+    });
 });
 
 // FINALLY :) :-) ... oh!!!
 // I would prefer strict type safety...
 // perhaps it is up to the validator function to handle this
 var InstanceOf = Model.ConstraintBuilder.build(function (v, obj) {
-                   return v instanceof obj;
-                 });
+    return v instanceof obj;
+});
 
 describe('Instanceof constraint check', function () {
-  it('of MyObject', function () {
-    assert.equal(InstanceOf.check(o, MyObject), true);
-  });
+    it('of MyObject', function () {
+        assert.equal(InstanceOf.check(o, MyObject), true);
+    });
 
-  it('of Object', function () {
-    assert.equal(InstanceOf.check(o, Object), true);
-    // I do not like this! ... but ok for now!
-  });
+    it('of Object', function () {
+        assert.equal(InstanceOf.check(o, Object), true);
+        // I do not like this! ... but ok for now!
+    });
 });
 
 // Other object to validate against MyObject
 var Other = function (){
-  this.name = "test";
+    this.name = 'test';
 };
 
 describe('InstanceOf Other', function () {
-  it('should be false', function () {
-    assert.equal(InstanceOf.check(o, Other), false);
-    //YESSSSSSSSSSssssssssss!!!!
-  });
+    it('should be false', function () {
+        assert.equal(InstanceOf.check(o, Other), false);
+        //YESSSSSSSSSSssssssssss!!!!
+    });
 });
 
 // Ideally
 var Arg = {
-  value: 'test',
-  constraints: {}
+    value: 'test',
+    constraints: {}
 };
 
 Arg.constraints[InstanceOf] = [Other];
 Arg.constraints[c2] = ['test'];
 
 function validate(obj) {
-  fns = Object.keys(obj.constraints);
-  var invalid = false;
-  fns.forEach(function (fn) {
-    invalid = invalid || !Object.apply(fn, obj.constraints[fn]);
-  });
-  return !invalid;
+    var fns = Object.keys(obj.constraints);
+    var invalid = false;
+    fns.forEach(function (fn) {
+        invalid = invalid || !Object.apply(fn, obj.constraints[fn]);
+    });
+    return !invalid;
 }
 
 describe('Validate function embedded in an object (ideally)', function () {
-  it('should be true', function () {
-    assert.equal(validate(Arg), true);
- });
+    it('should be true', function () {
+        assert.equal(validate(Arg), true);
+    });
 });
 
 /*

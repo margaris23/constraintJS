@@ -12,18 +12,18 @@ var plato = require('gulp-plato');
 var eslint = require('gulp-eslint');
 
 gulp.task('default', ['test'], function() {
-  // Default task
+    // Default task
 });
  
 gulp.task('eslint', function () {
-    return gulp.src('model.js')
+    return gulp.src(['model.js', 'test/test.js'])
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
 });
 
 gulp.task('pre-test', ['eslint'], function () {
-  return gulp.src(['model.js'])
+    return gulp.src(['model.js'])
     // Covering files
     .pipe(istanbul())
     // Force `require` to return covered files
@@ -31,7 +31,7 @@ gulp.task('pre-test', ['eslint'], function () {
 });
 
 gulp.task('test', ['pre-test', 'plato'], function () {
-  return gulp.src(['test/*.js'])
+    return gulp.src(['test/*.js'])
     .pipe(mocha())
     // Creating the reports after tests ran
     .pipe(istanbul.writeReports())
@@ -40,7 +40,7 @@ gulp.task('test', ['pre-test', 'plato'], function () {
 });
 
 gulp.task('plato', function () {
-  return gulp.src(['model.js', 'test/*.js'])
+    return gulp.src(['model.js', 'test/*.js'])
         .pipe(plato('report', {
             jshint: {
                 options: {
