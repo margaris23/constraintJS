@@ -30,7 +30,7 @@ gulp.task('pre-test', ['eslint'], function () {
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['pre-test', 'plato'], function () {
+gulp.task('test', ['pre-test'], function () {
     return gulp.src(['test/*.js'])
     .pipe(mocha())
     // Creating the reports after tests ran
