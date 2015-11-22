@@ -8,6 +8,7 @@
  * @description creates the main constraint object
  */
 var Constraint = function (valFn, numOfArgs) {
+  'use strict';
   this.check = valFn;
   this.noa = numOfArgs;	// for now lets consider them valid
 };
