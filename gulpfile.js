@@ -8,7 +8,7 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
-var plato = require('gulp-plato');
+//var plato = require('gulp-plato');
 var eslint = require('gulp-eslint');
 
 gulp.task('default', ['test'], function() {
